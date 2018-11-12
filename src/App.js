@@ -19,9 +19,7 @@ class App extends Component {
               render={props => {
                 return (
                   <CountryMap
-                    key={
-                      props.match.params.type + "-" + props.match.params.zone
-                    }
+                    key={props.match.params.type}
                     {...props}
                     type={props.match.params.type}
                     zone={props.match.params.zone}
