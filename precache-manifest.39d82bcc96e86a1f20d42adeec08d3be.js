@@ -4,15 +4,15 @@ self.__precacheManifest = [
     "url": "/belgium/static/js/runtime~main.a37df266.js"
   },
   {
-    "revision": "8edfd93bd697526e069c",
-    "url": "/belgium/static/js/main.8edfd93b.chunk.js"
+    "revision": "3b7174febfee25967a81",
+    "url": "/belgium/static/js/main.3b7174fe.chunk.js"
   },
   {
     "revision": "d85abfd879b6b033d049",
     "url": "/belgium/static/js/1.d85abfd8.chunk.js"
   },
   {
-    "revision": "8edfd93bd697526e069c",
+    "revision": "3b7174febfee25967a81",
     "url": "/belgium/static/css/main.1021f25c.chunk.css"
   },
   {
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/belgium/static/css/1.99301740.chunk.css"
   },
   {
-    "revision": "9a5a855f6f11da16f1070712e2f30644",
+    "revision": "1cfc5e92c47e5a4aa7eacc2d12cf7815",
     "url": "/belgium/index.html"
   }
 ];

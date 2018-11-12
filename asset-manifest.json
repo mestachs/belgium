@@ -1,7 +1,7 @@
 {
   "main.css": "/belgium/static/css/main.1021f25c.chunk.css",
-  "main.js": "/belgium/static/js/main.8edfd93b.chunk.js",
-  "main.js.map": "/belgium/static/js/main.8edfd93b.chunk.js.map",
+  "main.js": "/belgium/static/js/main.3b7174fe.chunk.js",
+  "main.js.map": "/belgium/static/js/main.3b7174fe.chunk.js.map",
   "static/css/1.99301740.chunk.css": "/belgium/static/css/1.99301740.chunk.css",
   "static/js/1.d85abfd8.chunk.js": "/belgium/static/js/1.d85abfd8.chunk.js",
   "static/js/1.d85abfd8.chunk.js.map": "/belgium/static/js/1.d85abfd8.chunk.js.map",
@@ -10,6 +10,6 @@
   "static/css/1.99301740.chunk.css.map": "/belgium/static/css/1.99301740.chunk.css.map",
   "static/css/main.1021f25c.chunk.css.map": "/belgium/static/css/main.1021f25c.chunk.css.map",
   "index.html": "/belgium/index.html",
-  "precache-manifest.aeef2de4489c82f5a909faaa8dfac282.js": "/belgium/precache-manifest.aeef2de4489c82f5a909faaa8dfac282.js",
+  "precache-manifest.39d82bcc96e86a1f20d42adeec08d3be.js": "/belgium/precache-manifest.39d82bcc96e86a1f20d42adeec08d3be.js",
   "service-worker.js": "/belgium/service-worker.js"
 }
