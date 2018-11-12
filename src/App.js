@@ -19,6 +19,9 @@ class App extends Component {
               render={props => {
                 return (
                   <CountryMap
+                    key={
+                      props.match.params.type + "-" + props.match.params.zone
+                    }
                     {...props}
                     type={props.match.params.type}
                     zone={props.match.params.zone}
@@ -27,7 +30,9 @@ class App extends Component {
               }}
             />
 
-            <Route render={() => <Redirect to="/belgium/regions" />} />
+            <Route
+              render={() => <Redirect to="/belgium/regions/region-flamande" />}
+            />
           </Switch>
         </div>
       </Router>

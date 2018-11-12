@@ -17,12 +17,20 @@ const regions = [
   {
     name: { fr: "Région Wallonne", nl: "Waalse Gewest" },
     armories:
-      "https://upload.wikimedia.org/wikipedia/commons/4/42/Flag_of_Wallonia.svg"
+      "https://upload.wikimedia.org/wikipedia/commons/4/42/Flag_of_Wallonia.svg",
+    provinces: ["Brabant wallon", "Hainaut", "Liège", "Luxembourg", "Namur"]
   },
   {
     name: { fr: "Région Flamande", nl: "Vlaams Gewest" },
     armories:
-      "https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Flanders.svg"
+      "https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Flanders.svg",
+    provinces: [
+      "Anvers",
+      "Brabant flamand",
+      "Flandre occidentale",
+      "Flandre orientale",
+      "Limbourg"
+    ]
   },
   {
     name: {
@@ -30,7 +38,8 @@ const regions = [
       nl: "Brussels Hoofdstedelijk Gewest"
     },
     armories:
-      "https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_the_Brussels-Capital_Region.svg"
+      "https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_the_Brussels-Capital_Region.svg",
+    provinces: ["Bruxelles capitale"]
   }
 ];
 
@@ -59,14 +68,6 @@ class CountryMap extends React.Component {
       dashArray: "3",
       fillOpacity: 0.7
     };
-  }
-
-  componentWillReceiveProps(newProps) {
-    const toLoad = newProps.type !== this.props.type;
-    this.props = newProps;
-    if (toLoad) {
-      this.loadData();
-    }
   }
 
   componentDidMount() {
@@ -161,6 +162,7 @@ class CountryMap extends React.Component {
     return (
       <div>
         <Map
+          key={this.props.type}
           center={position}
           zoom={this.state.zoom}
           style={{ width: "100%", height: "600px" }}

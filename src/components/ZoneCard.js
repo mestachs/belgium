@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import slugify from "slugify";
 
 const ZoneCard = props => {
   const { zone } = props;
@@ -16,6 +18,17 @@ const ZoneCard = props => {
           <b>{zone.name.fr}</b> <br /> <b>{zone.name.nl}</b>
         </h4>
         {zone.chiefTown && <p>Chef lieu : {zone.chiefTown.fr}</p>}
+        {zone.provinces &&
+          zone.provinces.map(p => (
+            <li key={p}>
+              <Link
+                to={"/belgium/provinces/" + slugify(p, { lower: true })}
+                replace
+              >
+                {p}
+              </Link>
+            </li>
+          ))}
       </div>
     </div>
   );
