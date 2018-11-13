@@ -21,3 +21,26 @@
   padding: 2px 16px;
   width: 50px;
 }
+
+.content {
+  margin-left: 40px;
+}
+
+.wikipedia {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+.wikipedia h1, h2, h3, h4 {
+  font-family: 'Lobster', cursive;
+}
+.wikipedia h2 {
+  margin-left: 15px;
+}
+.wikipedia p {
+  font-family: 'Arial';
+  margin-left: 50px;
+}
+.wikipedia p::first-letter { 
+  font-size: 200%;
+  color: #666666;
+}
