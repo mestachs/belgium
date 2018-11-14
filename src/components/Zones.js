@@ -89,4 +89,37 @@ const provinces = [
   }
 ];
 
-export default provinces;
+const regions = [
+  {
+    name: { fr: "Région Wallonne", nl: "Waalse Gewest" },
+    armories:
+      "https://upload.wikimedia.org/wikipedia/commons/4/42/Flag_of_Wallonia.svg",
+    provinces: ["Brabant wallon", "Hainaut", "Liège", "Luxembourg", "Namur"],
+    wikipedia: "Région_wallonne"
+  },
+  {
+    name: { fr: "Région Flamande", nl: "Vlaams Gewest" },
+    armories:
+      "https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Flanders.svg",
+    provinces: [
+      "Anvers",
+      "Brabant flamand",
+      "Flandre occidentale",
+      "Flandre orientale",
+      "Limbourg"
+    ],
+    wikipedia: "Région_flamande"
+  },
+  {
+    name: {
+      fr: "Région Bruxelles-Capitale",
+      nl: "Brussels Hoofdstedelijk Gewest"
+    },
+    armories:
+      "https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_the_Brussels-Capital_Region.svg",
+    provinces: ["Bruxelles capitale"],
+    wikipedia: "Région_de_Bruxelles-Capitale"
+  }
+];
+
+export default provinces.concat(regions);

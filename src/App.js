@@ -5,7 +5,8 @@ import {
   HashRouter as Router,
   Route,
   Switch,
-  Redirect
+  Redirect,
+  Link
 } from "react-router-dom";
 
 class App extends Component {
@@ -13,6 +14,19 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
+          <div className="navigation">
+            <ul>
+              <Link to={"/belgium/communautes/"} replace>
+                Communautés
+              </Link>
+              <Link to={"/belgium/regions/region-wallonne"} replace>
+                Régions
+              </Link>
+              <Link to={"/belgium/provinces/namur"} replace>
+                Provinces
+              </Link>
+            </ul>
+          </div>
           <Switch>
             <Route
               path="/belgium/:type/:zone"
@@ -23,6 +37,20 @@ class App extends Component {
                     {...props}
                     type={props.match.params.type}
                     zone={props.match.params.zone}
+                  />
+                );
+              }}
+            />
+
+            <Route
+              path="/belgium/communautes"
+              render={props => {
+                return (
+                  <CountryMap
+                    key="communautes"
+                    {...props}
+                    type="communautes"
+                    zone=""
                   />
                 );
               }}

@@ -9,6 +9,7 @@
   transition: 0.3s;
   border-radius: 5px; 
   padding: 2px 16px;
+  padding-bottom: 16px
 }
 
 .card img {
@@ -39,6 +40,9 @@
 .wikipedia h2 {
   margin-left: 15px;
 }
+.wikipedia h3 {
+  margin-left: 25px;
+}
 .wikipedia p {
   font-family: 'Arial';
   margin-left: 50px;
@@ -46,4 +50,31 @@
 .wikipedia p::first-letter { 
   font-size: 200%;
   color: #666666;
+}
+
+
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navigation li {
+  float: left;
+}
+
+.navigation a {
+  font-weight: bold;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none !important;
+  font-size: 16px;
+}
+
+.navigation li a:hover {
+  background-color: #111;
 }

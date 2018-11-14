@@ -1,64 +1,48 @@
 import React from "react";
-import { Map, TileLayer, GeoJSON } from "react-leaflet";
+import { Map, TileLayer, GeoJSON, ImageOverlay } from "react-leaflet";
 import Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
 import ReactMarkdown from "react-markdown";
 import ZoneCard from "./ZoneCard";
-import Credits from "./Credits";
-import provinces from "./Provinces";
+import zones from "./Zones";
 
 import { withRouter } from "react-router-dom";
 import slugify from "slugify";
 
+import wikiToMarkdown from "./WikiToMarkdown";
 Leaflet.Icon.Default.imagePath =
   "//cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/";
 
-const wikiToMd = wiki => {
-  wiki = wiki.replace("[pas clair]", "");
-  wiki = wiki.replace("[r\u00e9f. n\u00e9cessaire]", "");
-  wiki = wiki.replace("[\u00e9vasif]", "");
-  wiki = wiki.replace(/=====\s*(.*)\s*=====/g, "#### $1\n\n");
-  wiki = wiki.replace(/====\s*(.*)\s*====/g, "### $1\n\n");
-  wiki = wiki.replace(/===\s*(.*)\s*===/g, "## $1");
-  wiki = wiki.replace(/==\s*(.*)\s*==/g, "# $1");
-
-  wiki = wiki.replace(/\[([^\s]*)\s([^\]]*)\]/g, "[$2]($1)");
-  wiki = wiki.replace(/\*\*/g, "    *");
-  return wiki;
+const WikipediaArticle = props => {
+  const { zone, article } = props;
+  return (
+    <div className="wikipedia">
+      <div style={{ backgroundColor: "rgb(238,238,238,0.4)", padding: "50px" }}>
+        <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.fr">
+          Contenu soumis à la licence CC-BY-SA
+        </a>
+        . Source : Article{" "}
+        <em>
+          <a href={"http://fr.wikipedia.org/wiki/" + zone.wikipedia}>
+            {zone.wikipedia}
+          </a>
+        </em>{" "}
+        de <a href="http://fr.wikipedia.org/">Wikipédia en français</a> (
+        <a
+          href={
+            "http://fr.wikipedia.org/w/index.php?title=" +
+            zone.wikipedia +
+            "&action=history"
+          }
+        >
+          auteurs
+        </a>
+        )
+        <ReactMarkdown source={article} />
+      </div>
+    </div>
+  );
 };
-
-const regions = [
-  {
-    name: { fr: "Région Wallonne", nl: "Waalse Gewest" },
-    armories:
-      "https://upload.wikimedia.org/wikipedia/commons/4/42/Flag_of_Wallonia.svg",
-    provinces: ["Brabant wallon", "Hainaut", "Liège", "Luxembourg", "Namur"],
-    wikipedia: "Région_wallonne"
-  },
-  {
-    name: { fr: "Région Flamande", nl: "Vlaams Gewest" },
-    armories:
-      "https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Flanders.svg",
-    provinces: [
-      "Anvers",
-      "Brabant flamand",
-      "Flandre occidentale",
-      "Flandre orientale",
-      "Limbourg"
-    ],
-    wikipedia: "Région_flamande"
-  },
-  {
-    name: {
-      fr: "Région Bruxelles-Capitale",
-      nl: "Brussels Hoofdstedelijk Gewest"
-    },
-    armories:
-      "https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_the_Brussels-Capital_Region.svg",
-    provinces: ["Bruxelles capitale"],
-    wikipedia: "Région_de_Bruxelles-Capitale"
-  }
-];
 
 class CountryMap extends React.Component {
   constructor() {
@@ -91,10 +75,17 @@ class CountryMap extends React.Component {
     this.loadData();
   }
 
+  isCommunauteType() {
+    return this.props.type === "communautes";
+  }
+
   loadData() {
     const selectedZoneSlug = slugify(this.props.zone, { lower: true });
     const type = this.props.type;
 
+    if (this.isCommunauteType()) {
+      return;
+    }
     fetch("./" + type + ".geo.json")
       .then(res => res.json())
       .then(geojson => {
@@ -106,7 +97,6 @@ class CountryMap extends React.Component {
           const names = feature.properties.VARNAME_1
             ? feature.properties.VARNAME_1.split("|")
             : [feature.properties.nom];
-          const zones = provinces.concat(regions);
           const zone = zones.find(ou => {
             return names.some(name => {
               const slugOuFr = slugify(ou.name.fr, {
@@ -149,7 +139,9 @@ class CountryMap extends React.Component {
               .then(res => res.json())
               .then(json => {
                 const pageKey = Object.keys(json.query.pages)[0];
-                const article = wikiToMd(json.query.pages[pageKey].extract);
+                const article = wikiToMarkdown(
+                  json.query.pages[pageKey].extract
+                );
                 feature.properties.article =
                   "# " + zone.name.fr + "\n\n" + article;
                 this.setState({ demo: pageKey });
@@ -193,6 +185,8 @@ class CountryMap extends React.Component {
     return (
       <div>
         <Map
+          zoomControl={false}
+          scrollWheelZoom={false}
           key={this.props.type}
           center={position}
           zoom={this.state.zoom}
@@ -211,46 +205,30 @@ class CountryMap extends React.Component {
               onEachFeature={this.onEachFeature}
             />
           )}
+
+          {this.isCommunauteType() && (
+            <ImageOverlay
+              url="https://upload.wikimedia.org/wikipedia/commons/1/1e/BelgieGemeenschappenkaart.svg"
+              bounds={[
+                [49.4894835476, 2.53357303225],
+                [51.505023708, 6.42165815596]
+              ]}
+              opacity="0.8"
+            />
+          )}
         </Map>
         {this.state.selectedFeature &&
           this.state.selectedFeature.properties.zone && (
             <ZoneCard zone={this.state.selectedFeature.properties.zone} />
           )}
-        <div className="wikipedia">
-          {this.state.selectedFeature && (
-            <div>
-              <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.fr">
-                Contenu soumis à la licence CC-BY-SA
-              </a>
-              . Source : Article{" "}
-              <em>
-                <a
-                  href={
-                    "http://fr.wikipedia.org/wiki/" +
-                    this.state.selectedFeature.properties.zone.wikipedia
-                  }
-                >
-                  {this.state.selectedFeature.properties.zone.wikipedia}
-                </a>
-              </em>{" "}
-              de <a href="http://fr.wikipedia.org/">Wikipédia en français</a> (
-              <a
-                href={
-                  "http://fr.wikipedia.org/w/index.php?title=" +
-                  this.state.selectedFeature.properties.zone.wikipedia +
-                  "&action=history"
-                }
-              >
-                auteurs
-              </a>
-              )
-              <ReactMarkdown
-                source={this.state.selectedFeature.properties.article}
-              />
-            </div>
+        {this.state.selectedFeature &&
+          this.state.selectedFeature.properties.zone &&
+          this.state.selectedFeature.properties.article && (
+            <WikipediaArticle
+              zone={this.state.selectedFeature.properties.zone}
+              article={this.state.selectedFeature.properties.article}
+            />
           )}
-        </div>
-        <Credits />
       </div>
     );
   }
