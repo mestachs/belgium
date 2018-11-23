@@ -229,6 +229,22 @@ class CountryMap extends React.Component {
               article={this.state.selectedFeature.properties.article}
             />
           )}
+        {this.isCommunauteType() && (
+          <div className="card xl">
+            <div className="container">
+              <p>
+                <h4>Carte des Communautés de Belgique</h4>
+                <li>Communauté flamande (en vert)</li>
+                <li>Communauté française (en rouge)</li>
+                <li>
+                  Région Bruxelles-Capitale (striée vert et rouge) où les 2
+                  communautés ont des compétences
+                </li>
+                <li>Communauté germanophone (en bleu)</li>
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
