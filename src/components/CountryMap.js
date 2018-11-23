@@ -8,7 +8,7 @@ import zones from "./Zones";
 
 import { withRouter } from "react-router-dom";
 import slugify from "slugify";
-
+import debounce from "lodash.debounce";
 import wikiToMarkdown from "./WikiToMarkdown";
 Leaflet.Icon.Default.imagePath =
   "//cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/";
@@ -57,6 +57,7 @@ class CountryMap extends React.Component {
     this.resetHighlight = this.resetHighlight.bind(this);
     this.loadData = this.loadData.bind(this);
     this.getStyle = this.getStyle.bind(this);
+    this.handleResize = debounce(this.handleResize.bind(this), 500);
   }
 
   getStyle(feature) {
@@ -71,7 +72,19 @@ class CountryMap extends React.Component {
     };
   }
 
+  handleResize() {
+    const zoom =
+      window.innerWidth < 700 ? (window.innerWidth < 500 ? 6 : 7) : 8;
+    this.setState({ zoom });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
+
   componentDidMount() {
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize();
     this.loadData();
   }
 
@@ -234,13 +247,25 @@ class CountryMap extends React.Component {
             <div className="container">
               <p>
                 <h4>Carte des Communautés de Belgique</h4>
-                <li>Communauté flamande (en vert)</li>
-                <li>Communauté française (en rouge)</li>
                 <li>
-                  Région Bruxelles-Capitale (striée vert et rouge) où les 2
+                  Communauté flamande{" "}
+                  <span style={{ color: "#A0A000" }}>(en vert)</span>
+                </li>
+                <li>
+                  La Fédération Wallonie-Bruxelles{" "}
+                  <span style={{ color: "#A00000" }}>(en rouge)</span> aka
+                  Communauté française de Belgique
+                </li>
+                <li>
+                  Région Bruxelles-Capitale (striée{" "}
+                  <span style={{ color: "#A0A000" }}>vert</span> et{" "}
+                  <span style={{ color: "#A00000" }}>rouge</span>) où les 2
                   communautés ont des compétences
                 </li>
-                <li>Communauté germanophone (en bleu)</li>
+                <li>
+                  Communauté germanophone{" "}
+                  <span style={{ color: "#0000A0" }}>(en bleu)</span>
+                </li>
               </p>
             </div>
           </div>

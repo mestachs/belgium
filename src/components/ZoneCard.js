@@ -34,14 +34,14 @@ const ZoneCard = props => {
         </h4>
         {zone.chiefTown && (
           <p>
-            <i class="fas fa-gopuram" title="Chef lieu" /> &nbsp;
+            <i className="fas fa-gopuram" title="Chef lieu" /> &nbsp;
             {zone.chiefTown.fr}
           </p>
         )}
         {zone.facts &&
           Object.keys(zone.facts).map(fact => (
-            <p>
-              <i class={"fas fa-" + factsToFa[fact]} title={fact} />
+            <p key={fact}>
+              <i className={"fas fa-" + factsToFa[fact]} title={fact} />
               &nbsp;
               <span>
                 {numberWithSpaces(zone.facts[fact])}&nbsp;
