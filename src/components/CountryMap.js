@@ -13,6 +13,17 @@ import wikiToMarkdown from "./WikiToMarkdown";
 Leaflet.Icon.Default.imagePath =
   "//cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/";
 
+const zonesByNsi = {};
+
+const parentZonesByNsi = {};
+
+zones.forEach(zone => {
+  zonesByNsi[zone.nsi] = zone;
+  if (zone.children) {
+    zone.children.forEach(child => (parentZonesByNsi[child] = zone));
+  }
+});
+
 const WikipediaArticle = props => {
   const { zone, article } = props;
   return (
@@ -62,6 +73,17 @@ class CountryMap extends React.Component {
 
   getStyle(feature) {
     const selected = this.state && this.state.selectedFeature === feature;
+    if (this.isCommunesTypes()) {
+      const parentZone = parentZonesByNsi[feature.properties.zone.nsi];
+      return {
+        fillColor: selected ? "red" : parentZone ? parentZone.color : "#ece7f2",
+        weight: 2,
+        opacity: 0.7,
+        color: selected ? "red" : parentZone ? parentZone.color : "#ece7f2",
+        dashArray: "3",
+        fillOpacity: 0.6
+      };
+    }
     return {
       fillColor: selected ? "red" : "#ece7f2",
       weight: 2,
@@ -91,6 +113,9 @@ class CountryMap extends React.Component {
   isCommunauteType() {
     return this.props.type === "communautes";
   }
+  isCommunesTypes() {
+    return this.props.type === "communes";
+  }
 
   loadData() {
     const selectedZoneSlug = slugify(this.props.zone, { lower: true });
@@ -109,7 +134,11 @@ class CountryMap extends React.Component {
           }
           const names = feature.properties.VARNAME_1
             ? feature.properties.VARNAME_1.split("|")
-            : [feature.properties.nom];
+            : [
+                feature.properties.nom
+                  ? feature.properties.nom
+                  : feature.properties.name
+              ];
           const zone = zones.find(ou => {
             return names.some(name => {
               const slugOuFr = slugify(ou.name.fr, {
@@ -123,10 +152,11 @@ class CountryMap extends React.Component {
               });
 
               return (
-                ou.name.fr === name ||
-                ou.name.nl === name ||
-                slugOuFr === slugName ||
-                slugOuNl === slugName
+                this.props.type.startsWith(ou.type) &&
+                (ou.name.fr === name ||
+                  ou.name.nl === name ||
+                  slugOuFr === slugName ||
+                  slugOuNl === slugName)
               );
             });
           });
@@ -139,12 +169,16 @@ class CountryMap extends React.Component {
             feature.properties.slug = slugify(names[0], {
               lower: true
             });
+            feature.properties.zone = {
+              name: { fr: names[0] },
+              nsi: feature.properties.nsi
+            };
           }
 
           if (feature.properties.slug === selectedZoneSlug) {
             selectedFeature = feature;
           }
-          if (zone.wikipedia) {
+          if (zone && zone.wikipedia) {
             fetch(
               "https://fr.wikipedia.org/w/api.php?origin=*&format=json&action=query&prop=extracts&explaintext&redirects=1&titles=" +
                 zone.wikipedia
@@ -198,8 +232,8 @@ class CountryMap extends React.Component {
     return (
       <div>
         <Map
-          zoomControl={false}
-          scrollWheelZoom={false}
+          zoomControl={this.isCommunesTypes()}
+          scrollWheelZoom={this.isCommunesTypes()}
           key={this.props.type}
           center={position}
           zoom={this.state.zoom}
@@ -232,7 +266,11 @@ class CountryMap extends React.Component {
         </Map>
         {this.state.selectedFeature &&
           this.state.selectedFeature.properties.zone && (
-            <ZoneCard zone={this.state.selectedFeature.properties.zone} />
+            <ZoneCard
+              zone={this.state.selectedFeature.properties.zone}
+              zonesByNsi={zonesByNsi}
+              parentZonesByNsi={parentZonesByNsi}
+            />
           )}
         {this.state.selectedFeature &&
           this.state.selectedFeature.properties.zone &&
@@ -245,7 +283,7 @@ class CountryMap extends React.Component {
         {this.isCommunauteType() && (
           <div className="card xl">
             <div className="container">
-              <p>
+              <div>
                 <h4>Carte des Communautés de Belgique</h4>
                 <li>
                   Communauté flamande{" "}
@@ -266,7 +304,7 @@ class CountryMap extends React.Component {
                   Communauté germanophone{" "}
                   <span style={{ color: "#0000A0" }}>(en bleu)</span>
                 </li>
-              </p>
+              </div>
             </div>
           </div>
         )}

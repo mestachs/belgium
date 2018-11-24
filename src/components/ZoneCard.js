@@ -18,17 +18,19 @@ const factsToUnit = {
 };
 
 const ZoneCard = props => {
-  const { zone } = props;
+  const { zone, zonesByNsi, parentZonesByNsi } = props;
 
   return (
     <div className="card">
       <div className="container">
-        <img
-          src={zone.armories}
-          alt={"armories of " + zone.name.fr}
-          width="100%"
-          style={{ maxWidth: "200px", maxHeight: "200px" }}
-        />
+        {zone.armories && (
+          <img
+            src={zone.armories}
+            alt={"armories of " + zone.name.fr}
+            width="100%"
+            style={{ maxWidth: "200px", maxHeight: "200px" }}
+          />
+        )}
         <h4>
           <b>{zone.name.fr}</b> <br /> <b>{zone.name.nl}</b>
         </h4>
@@ -37,6 +39,34 @@ const ZoneCard = props => {
             <i className="fas fa-gopuram" title="Chef lieu" /> &nbsp;
             {zone.chiefTown.fr}
           </p>
+        )}
+        {zone.nsi && (
+          <React.Fragment>
+            <p>
+              <i className="fas fa-id-badge" title="Nis code" /> &nbsp;
+              {zone.nsi}
+            </p>
+            {parentZonesByNsi[zone.nsi] && parentZonesByNsi[zone.nsi].name.fr}
+            {parentZonesByNsi[zone.nsi] &&
+              parentZonesByNsi[parentZonesByNsi[zone.nsi].nsi] && (
+                <React.Fragment>
+                  <br />
+                  <Link
+                    to={
+                      "/belgium/regions/" +
+                      slugify(
+                        parentZonesByNsi[parentZonesByNsi[zone.nsi].nsi].name
+                          .fr,
+                        { lower: true }
+                      )
+                    }
+                    replace
+                  >
+                    {parentZonesByNsi[parentZonesByNsi[zone.nsi].nsi].name.fr}
+                  </Link>
+                </React.Fragment>
+              )}
+          </React.Fragment>
         )}
         {zone.facts &&
           Object.keys(zone.facts).map(fact => (

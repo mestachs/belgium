@@ -25,6 +25,9 @@ class App extends Component {
               <Link to={"/belgium/provinces/namur"} replace>
                 Provinces
               </Link>
+              <Link to={"/belgium/communes/la-bruyere"} replace>
+                Communes
+              </Link>
             </ul>
           </div>
           <Switch>
@@ -41,7 +44,6 @@ class App extends Component {
                 );
               }}
             />
-
             <Route
               path="/belgium/communautes"
               render={props => {
@@ -55,7 +57,10 @@ class App extends Component {
                 );
               }}
             />
-
+            <Route
+              path="/belgium/communes"
+              render={() => <Redirect to="/belgium/communes/la-bruyere" />}
+            />
             <Route
               render={() => <Redirect to="/belgium/regions/region-flamande" />}
             />
