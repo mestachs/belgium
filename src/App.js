@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import CountryMap from "./components/CountryMap";
+import Radios from "./components/Radios";
 import {
   HashRouter as Router,
   Route,
@@ -31,6 +32,13 @@ class App extends Component {
             </ul>
           </div>
           <Switch>
+            <Route
+              path="/belgium/radios/:selectedSlug"
+              render={props => (
+                <Radios selectedSlug={props.match.params.selectedSlug} />
+              )}
+            />
+            <Route path="/belgium/radios" render={props => <Radios />} />
             <Route
               path="/belgium/:type/:zone"
               render={props => {
