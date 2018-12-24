@@ -15,22 +15,31 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <div className="navigation">
-            <ul>
-              <Link to={"/belgium/communautes/"} replace>
-                Communautés
-              </Link>
-              <Link to={"/belgium/regions/region-wallonne"} replace>
-                Régions
-              </Link>
-              <Link to={"/belgium/provinces/namur"} replace>
-                Provinces
-              </Link>
-              <Link to={"/belgium/communes/la-bruyere"} replace>
-                Communes
-              </Link>
-            </ul>
-          </div>
+          <Switch>
+            <Route
+              path="/belgium/radios/:selectedSlug"
+              Component={React.Fragment}
+            />
+            <Route path="/belgium/radios" Component={React.Fragment} />
+            <Route>
+              <div className="navigation">
+                <ul>
+                  <Link to={"/belgium/communautes/"} replace>
+                    Communautés
+                  </Link>
+                  <Link to={"/belgium/regions/region-wallonne"} replace>
+                    Régions
+                  </Link>
+                  <Link to={"/belgium/provinces/namur"} replace>
+                    Provinces
+                  </Link>
+                  <Link to={"/belgium/communes/la-bruyere"} replace>
+                    Communes
+                  </Link>
+                </ul>
+              </div>
+            </Route>
+          </Switch>
           <Switch>
             <Route
               path="/belgium/radios/:selectedSlug"
@@ -38,7 +47,10 @@ class App extends Component {
                 <Radios selectedSlug={props.match.params.selectedSlug} />
               )}
             />
-            <Route path="/belgium/radios" render={props => <Radios />} />
+            <Route
+              path="/belgium/radios"
+              render={props => <Redirect to="/belgium/radios/pure-fm" />}
+            />
             <Route
               path="/belgium/:type/:zone"
               render={props => {
