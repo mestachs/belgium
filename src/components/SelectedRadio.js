@@ -71,7 +71,7 @@ const SelectedRadio = props => {
                 }}
               >
                 <i className="fab fa-itunes-note" />
-                &nbsp; &nbsp;
+                &nbsp;
                 <b>{playingNow.name}</b>
                 <br />
                 &nbsp;&nbsp;<i>{playingNow.artistName}</i>

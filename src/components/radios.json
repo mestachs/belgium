@@ -3,7 +3,8 @@
     "name": "Radio1",
     "site": "https://radio1.be/",
     "logo": "./logos/radio1.png",
-    "listen": { "high": "http://icecast.vrtcdn.be/radio1-high.mp3" }
+    "listen": { "high": "http://icecast.vrtcdn.be/radio1-high.mp3" },
+    "onair": "https://services.vrt.be/playlist/onair?channel_code=11&accept=application%2Fvnd.playlist.vrt.be.noa_1.0%2Bjson"
   },
   {
     "name": "La Première - La 1ère",
@@ -89,7 +90,7 @@
     "site": "https://stubru.be/",
     "logo": "https://cds.stubru.be/sites/default/files/_still_.gif",
     "listen": { "high": "http://icecast.vrtcdn.be/stubru-high.mp3" },
-    "onair_disabled": "https://services.vrt.be/playlist/onair?channel_code=11&accept=application%2Fvnd.playlist.vrt.be.noa_1.0%2Bjson"
+    "onair": "https://services.vrt.be/playlist/onair?channel_code=41&accept=application%2Fvnd.playlist.vrt.be.noa_1.0%2Bjson"
   },
   {
     "name": "Vivacité",
@@ -115,7 +116,8 @@
     "name": "Ketnet Hits",
     "site": "http://www.ketnet.be/wrap/luister-naar-ketnet-hits",
     "logo": "https://www.ketnet.be/sites/default/files/styles/program_header_epg/public/Header-ketnethits.jpg?itok=qOX5mpWp",
-    "listen": { "high": " http://icecast.vrtcdn.be/ketnetradio-high.mp3" }
+    "listen": { "high": " http://icecast.vrtcdn.be/ketnetradio-high.mp3" },
+    "onair": "https://services.vrt.be/playlist/onair?channel_code=03&accept=application%2Fvnd.playlist.vrt.be.noa_1.0%2Bjson"
   },
   {
     "name": "Sporza",
@@ -127,7 +129,8 @@
     "name": "Klara",
     "site": "https://klara.be/",
     "logo": "https://klara.be/s/i/1OGsTnwJDXQyhZ7P.svg",
-    "listen": { "high": "http://icecast.vrtcdn.be/klara-high.mp3" }
+    "listen": { "high": "http://icecast.vrtcdn.be/klara-high.mp3" },
+    "onair": "https://services.vrt.be/playlist/onair?channel_code=31&accept=application%2Fvnd.playlist.vrt.be.noa_1.0%2Bjson"
   },
   {
     "name": "BDJ Mashup",
@@ -140,14 +143,17 @@
     "name": "NRJ",
     "site": "https://www.nrj.be/",
     "logo": "https://www.nrj.be/images/LogoNRJ150.png",
-    "listen": { "high": "http://streamingp.shoutcast.com/NRJPremium" }
+    "listen": { "high": "http://streamingp.shoutcast.com/NRJPremium" },
+    "onair": "http://np.maradio.be/qp/v3/events?rpId=1016"
   },
   {
     "name": "MNM",
     "site": "https://mnm.be/",
     "logo": "https://mnm.be/images/_layout/logo-color.svg",
     "backgroundColor": "#2c2a79",
-    "listen": { "high": "http://icecast.vrtcdn.be/mnm-high.mp3" }
+    "listen": { "high": "http://icecast.vrtcdn.be/mnm-high.mp3" },
+    "onair": "https://services.vrt.be/playlist/onair?channel_code=55&accept=application%2Fvnd.playlist.vrt.be.noa_1.0%2Bjson"
+
   },
   {
     "name": "RUN",
@@ -161,7 +167,7 @@
     "site": "http://www.maximumfm.be/",
     "logo": "http://www.maximumfm.be/upload/design/5a73230e15f7c9.26938431.jpeg",
     "listen": { "high": "http://maximum.belstream.net/maximum.mp3" },
-    "onair":"http://np.maradio.be/qp/v3/events?rpId=4"
+    "onair": "http://np.maradio.be/qp/v3/events?rpId=4"
   },
   {
     "name": "Must FM",
@@ -169,7 +175,7 @@
     "logo": "http://www.mustfm.be/_media/img/small/logo-must-fm-le-son.png",
     "backgroundColor": "#414141",
     "listen": { "high": "http://mustfm.ice.infomaniak.ch/mustfm-192.mp3" },
-    "onair":"http://np.maradio.be/qp/v3/events?rpId=1011"
+    "onair": "http://np.maradio.be/qp/v3/events?rpId=1011"
   },
   {
     "name": "Sud Radio Belgique",
@@ -177,7 +183,7 @@
     "logo": "http://www.sudradio.net/images/logo.png",
     "backgroundColor": "#004489",
     "listen": { "high": "http://sudradio.ice.infomaniak.ch/sudradio-96.aac" },
-    "onair":"http://np.maradio.be/qp/v3/events?rpId=1108"
+    "onair": "http://np.maradio.be/qp/v3/events?rpId=1108"
   },
   {
     "name": "BRF1",

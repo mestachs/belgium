@@ -67,19 +67,41 @@ class Radios extends Component {
       fetch(proxyUrl + radio.onair)
         .then(response => response.json())
         .then(response => {
-          let now = response.results.now;
-          if (now.type === "SI" && response.results.previous) {
-            now =
-              response.results.previous[response.results.previous.length - 1];
-          }
-          if (now.type !== "SI") {
-            this.setState({
-              playingNow: {
-                imageUrl: now.imageUrl,
-                name: humanize(now.name || now.programmeName),
-                artistName: humanize(now.artistName)
-              }
-            });
+          console.log(JSON.stringify(response));
+          if (radio.onair.includes("vrt.be")) {
+            let onair = response.onairs.find(
+              onair => onair.onairType === "NOW"
+            );
+            if (onair === undefined) {
+              onair = response.onairs.find(
+                onair => onair.onairType === "PREVIOUS"
+              );
+            }
+            if (onair) {
+              this.setState({
+                playingNow: {
+                  imageUrl:
+                    "https://imgplaceholder.com/100x100/cccccc/757575/fa-bullhorn",
+                  name: humanize(onair.properties[1].value),
+                  artistName: humanize(onair.properties[2].value)
+                }
+              });
+            }
+          } else {
+            let now = response.results.now;
+            if (now.type === "SI" && response.results.previous) {
+              now =
+                response.results.previous[response.results.previous.length - 1];
+            }
+            if (now.type !== "SI") {
+              this.setState({
+                playingNow: {
+                  imageUrl: now.imageUrl,
+                  name: humanize(now.name || now.programmeName),
+                  artistName: humanize(now.artistName)
+                }
+              });
+            }
           }
         });
     }
