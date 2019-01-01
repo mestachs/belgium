@@ -137,7 +137,7 @@
     "site": "https://bdjradio.com/mashup/",
     "logo": "https://bdjradio.com/media/images/logo-bdj-mashup.jpg",
     "listen": { "high": "http://listen128.radionomy.com/bdjmashup" },
-    "onair_disabled": "https://www.radionomy.com/en/OnAir/GetCurrentSongPlayer"
+    "onair": "https://radionomy.letoptop.fr/currentsong/get_api.php?radiouid=0da5a88d-0a44-47cc-bfee-509bd22307b3"
   },
   {
     "name": "NRJ",

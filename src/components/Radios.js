@@ -60,50 +60,68 @@ class Radios extends Component {
       .catch(() => {
         this.setState({ playStatus: "paused" });
       });
-
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
     if (radio.onair) {
-      var proxyUrl = "https://cors-anywhere.herokuapp.com/";
-
-      fetch(proxyUrl + radio.onair)
-        .then(response => response.json())
-        .then(response => {
-          console.log(JSON.stringify(response));
-          if (radio.onair.includes("vrt.be")) {
-            let onair = response.onairs.find(
-              onair => onair.onairType === "NOW"
-            );
-            if (onair === undefined) {
-              onair = response.onairs.find(
-                onair => onair.onairType === "PREVIOUS"
+      if (radio.onair.includes("radionomy")) {
+        fetch(proxyUrl + radio.onair)
+          .then(response => response.text())
+          .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+          .then(response => {
+            console.log(JSON.stringify(response));
+            const track = response.children[0].children[5];
+            this.setState({
+              playingNow: {
+                imageUrl:
+                  "https://imgplaceholder.com/50x50/cccccc/757575/fa-bullhorn",
+                name: track.children[1].textContent,
+                artistName: track.children[2].textContent
+              }
+            });
+          });
+      } else {
+        fetch(proxyUrl + radio.onair)
+          .then(response => response.json())
+          .then(response => {
+            console.log(JSON.stringify(response));
+            if (radio.onair.includes("vrt.be")) {
+              let onair = response.onairs.find(
+                onair => onair.onairType === "NOW"
               );
+              if (onair === undefined) {
+                onair = response.onairs.find(
+                  onair => onair.onairType === "PREVIOUS"
+                );
+              }
+              if (onair) {
+                this.setState({
+                  playingNow: {
+                    imageUrl:
+                      "https://imgplaceholder.com/50x50/cccccc/757575/fa-bullhorn",
+                    name: humanize(onair.properties[1].value),
+                    artistName: humanize(onair.properties[2].value)
+                  }
+                });
+              }
+            } else {
+              let now = response.results.now;
+              if (now.type === "SI" && response.results.previous) {
+                now =
+                  response.results.previous[
+                    response.results.previous.length - 1
+                  ];
+              }
+              if (now.type !== "SI") {
+                this.setState({
+                  playingNow: {
+                    imageUrl: now.imageUrl,
+                    name: humanize(now.name || now.programmeName),
+                    artistName: humanize(now.artistName)
+                  }
+                });
+              }
             }
-            if (onair) {
-              this.setState({
-                playingNow: {
-                  imageUrl:
-                    "https://imgplaceholder.com/100x100/cccccc/757575/fa-bullhorn",
-                  name: humanize(onair.properties[1].value),
-                  artistName: humanize(onair.properties[2].value)
-                }
-              });
-            }
-          } else {
-            let now = response.results.now;
-            if (now.type === "SI" && response.results.previous) {
-              now =
-                response.results.previous[response.results.previous.length - 1];
-            }
-            if (now.type !== "SI") {
-              this.setState({
-                playingNow: {
-                  imageUrl: now.imageUrl,
-                  name: humanize(now.name || now.programmeName),
-                  artistName: humanize(now.artistName)
-                }
-              });
-            }
-          }
-        });
+          });
+      }
     }
   }
   render() {
