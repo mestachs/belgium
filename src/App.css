@@ -130,9 +130,26 @@ h4 {
   cursor: pointer;
 }
 
+
+
+a, p,i,b {
+  color: lightgrey
+}
+body {
+  background: #302e2e
+}
+img {
+  filter:  brightness(0.85);
+}
+
+img:hover {
+  filter: none;
+}
+
 .btm-img {
   position: relative;
   cursor: pointer;
+  
 }
 .overlay {
   position: absolute;
@@ -143,7 +160,7 @@ h4 {
   width: 100%;
   opacity: 0;
   transition: 0.5s ease;
-  background-color: rgba(0, 0, 0, 0.7);
+  filter: none;
   text-align: center;
 }
 .top-img:hover .overlay,
@@ -165,7 +182,7 @@ h4 {
   width: 0;
   height: 74px;
   outline: 0;
-  border-color: transparent transparent transparent #202020;
+  border-color: transparent transparent transparent #666666;
   transition: 100ms all ease;
   cursor: pointer;
   border-style: solid;
