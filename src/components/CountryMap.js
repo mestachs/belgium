@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import ReactMarkdown from "react-markdown";
 import ZoneCard from "./ZoneCard";
 import zones from "./Zones";
-
+import countries from "./countries.json";
 import { withRouter } from "react-router-dom";
 import slugify from "slugify";
 import debounce from "lodash.debounce";
@@ -95,9 +95,11 @@ class CountryMap extends React.Component {
   }
 
   handleResize() {
-    const zoom =
-      window.innerWidth < 700 ? (window.innerWidth < 500 ? 6 : 7) : 8;
-    this.setState({ zoom });
+    if (!this.isEurope()) {
+      const zoom =
+        window.innerWidth < 700 ? (window.innerWidth < 500 ? 6 : 7) : 8;
+      this.setState({ zoom });
+    }
   }
 
   componentWillUnmount() {
@@ -108,6 +110,9 @@ class CountryMap extends React.Component {
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
     this.loadData();
+    if (this.isEurope()) {
+      this.setState({ zoom: 4 });
+    }
   }
 
   isCommunauteType() {
@@ -138,7 +143,10 @@ class CountryMap extends React.Component {
                 feature.properties.nom
                   ? feature.properties.nom
                   : feature.properties.name
+                  ? feature.properties.name
+                  : countries[feature.properties.ISO2].name
               ];
+
           const zone = zones.find(ou => {
             return names.some(name => {
               const slugOuFr = slugify(ou.name.fr, {
@@ -147,6 +155,10 @@ class CountryMap extends React.Component {
               const slugOuNl = slugify(ou.name.nl, {
                 lower: true
               });
+              if (name == undefined) {
+                console.log("no name for " + feature.properties.ISO2);
+                debugger;
+              }
               const slugName = slugify(name, {
                 lower: true
               });
@@ -171,10 +183,14 @@ class CountryMap extends React.Component {
             });
             feature.properties.zone = {
               name: { fr: names[0] },
-              nsi: feature.properties.nsi
+              nsi: feature.properties.nsi,
+              code: feature.properties.ISO2
             };
           }
-
+          if (countries[feature.properties.ISO2]) {
+            const country = countries[feature.properties.ISO2];
+            feature.properties.zone.capital = country.capital;
+          }
           if (feature.properties.slug === selectedZoneSlug) {
             selectedFeature = feature;
           }
@@ -215,25 +231,34 @@ class CountryMap extends React.Component {
     const layer = e.target;
     const feature = layer.feature;
 
-    this.props.history.push(
-      "/belgium/" + this.props.type + "/" + feature.properties.slug
-    );
+    if (this.isEurope()) {
+      this.props.history.push("/europe/" + feature.properties.slug);
+    } else {
+      this.props.history.push(
+        "/europe/belgium/" + this.props.type + "/" + feature.properties.slug
+      );
+    }
 
     this.setState({
       selectedFeature: feature
     });
   }
 
+  isEurope() {
+    return this.props.type === "europe";
+  }
+
   highlightFeature(evt) {}
   resetHighlight(evt) {}
   render() {
     const position = [this.state.lat, this.state.lng];
-
     return (
       <div>
         <Map
-          zoomControl={this.isCommunesTypes()}
-          scrollWheelZoom={this.isCommunesTypes()}
+          zoomControl={this.isCommunesTypes() || this.isEurope()}
+          scrollWheelZoom={
+            this.isCommunesTypes() || this.props.type == "europe"
+          }
           key={this.props.type}
           center={position}
           zoom={this.state.zoom}

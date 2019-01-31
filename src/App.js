@@ -17,23 +17,26 @@ class App extends Component {
         <div className="App">
           <Switch>
             <Route
-              path="/belgium/radios/:selectedSlug"
+              path="/europe/belgium/radios/:selectedSlug"
               Component={React.Fragment}
             />
-            <Route path="/belgium/radios" Component={React.Fragment} />
+            <Route path="/europe/belgium/radios" Component={React.Fragment} />
             <Route>
               <div className="navigation">
                 <ul>
-                  <Link to={"/belgium/communautes/"} replace>
+                  <Link to={"/europe/"} replace>
+                    Europe
+                  </Link>
+                  <Link to={"/europe/belgium/communautes/"} replace>
                     Communautés
                   </Link>
-                  <Link to={"/belgium/regions/region-wallonne"} replace>
+                  <Link to={"/europe/belgium/regions/region-wallonne"} replace>
                     Régions
                   </Link>
-                  <Link to={"/belgium/provinces/namur"} replace>
+                  <Link to={"/europe/belgium/provinces/namur"} replace>
                     Provinces
                   </Link>
-                  <Link to={"/belgium/communes/la-bruyere"} replace>
+                  <Link to={"/europe/belgium/communes/la-bruyere"} replace>
                     Communes
                   </Link>
                 </ul>
@@ -42,17 +45,42 @@ class App extends Component {
           </Switch>
           <Switch>
             <Route
-              path="/belgium/radios/:selectedSlug"
+              exact
+              path="/europe"
+              render={props => (
+                <CountryMap
+                  key="europe"
+                  {...props}
+                  type="europe"
+                  zone="europe"
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/europe/:zone"
+              render={props => (
+                <CountryMap
+                  key="europe"
+                  {...props}
+                  type="europe"
+                  zone={props.match.params.zone}
+                />
+              )}
+            />
+
+            <Route
+              path="/europe/belgium/radios/:selectedSlug"
               render={props => (
                 <Radios selectedSlug={props.match.params.selectedSlug} />
               )}
             />
             <Route
-              path="/belgium/radios"
+              path="/europe/belgium/radios"
               render={props => <Redirect to="/belgium/radios/pure-fm" />}
             />
             <Route
-              path="/belgium/:type/:zone"
+              path="/europe/belgium/:type/:zone"
               render={props => {
                 return (
                   <CountryMap
@@ -65,7 +93,7 @@ class App extends Component {
               }}
             />
             <Route
-              path="/belgium/communautes"
+              path="/europe/belgium/communautes"
               render={props => {
                 return (
                   <CountryMap
@@ -78,11 +106,15 @@ class App extends Component {
               }}
             />
             <Route
-              path="/belgium/communes"
-              render={() => <Redirect to="/belgium/communes/la-bruyere" />}
+              path="/europe/belgium/communes"
+              render={() => (
+                <Redirect to="/europe/belgium/communes/la-bruyere" />
+              )}
             />
             <Route
-              render={() => <Redirect to="/belgium/regions/region-flamande" />}
+              render={() => (
+                <Redirect to="/europe/belgium/regions/region-flamande" />
+              )}
             />
           </Switch>
         </div>

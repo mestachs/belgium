@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import slugify from "slugify";
 
+import FlagIcon from "./FlagIcon";
+
 const numberWithSpaces = x => {
   var parts = x.toString().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -19,7 +21,7 @@ const factsToUnit = {
 
 const ZoneCard = props => {
   const { zone, zonesByNsi, parentZonesByNsi } = props;
-
+  debugger;
   return (
     <div className="card">
       <div className="container">
@@ -53,7 +55,7 @@ const ZoneCard = props => {
                   <br />
                   <Link
                     to={
-                      "/belgium/regions/" +
+                      "/europe/belgium/regions/" +
                       slugify(
                         parentZonesByNsi[parentZonesByNsi[zone.nsi].nsi].name
                           .fr,
@@ -83,7 +85,7 @@ const ZoneCard = props => {
           zone.provinces.map(p => (
             <li key={p}>
               <Link
-                to={"/belgium/provinces/" + slugify(p, { lower: true })}
+                to={"/europe/belgium/provinces/" + slugify(p, { lower: true })}
                 replace
               >
                 {p}
@@ -92,12 +94,21 @@ const ZoneCard = props => {
           ))}
         {zone.region && (
           <Link
-            to={"/belgium/regions/" + slugify(zone.region, { lower: true })}
+            to={
+              "/europe/belgium/regions/" + slugify(zone.region, { lower: true })
+            }
             replace
           >
             {zone.region}
           </Link>
         )}
+        {zone.capital && (
+          <p>
+            <i className="fas fa-gopuram" title="Capitale" /> &nbsp;
+            {zone.capital}
+          </p>
+        )}
+        {zone.code && <FlagIcon code={zone.code.toLowerCase()} size="5x" />}
       </div>
     </div>
   );
