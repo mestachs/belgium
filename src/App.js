@@ -39,11 +39,28 @@ class App extends Component {
                   <Link to={"/europe/belgium/communes/la-bruyere"} replace>
                     Communes
                   </Link>
+                  <Link to={"/europe/belgium/radios/pure-fm"} replace>
+                    Radios
+                  </Link>
                 </ul>
               </div>
             </Route>
           </Switch>
           <Switch>
+            <Route
+              path="/europe/belgium/radios/:selectedSlug"
+              render={props => (
+                <Radios
+                  key="radios"
+                  selectedSlug={props.match.params.selectedSlug}
+                />
+              )}
+            />
+            <Redirect
+              from="/europe/belgium/radios"
+              to="/europe/belgium/radios/pure-fm"
+            />
+            }
             <Route
               exact
               path="/europe"
@@ -67,17 +84,6 @@ class App extends Component {
                   zone={props.match.params.zone}
                 />
               )}
-            />
-
-            <Route
-              path="/europe/belgium/radios/:selectedSlug"
-              render={props => (
-                <Radios selectedSlug={props.match.params.selectedSlug} />
-              )}
-            />
-            <Route
-              path="/europe/belgium/radios"
-              render={props => <Redirect to="/belgium/radios/pure-fm" />}
             />
             <Route
               path="/europe/belgium/:type/:zone"
@@ -111,10 +117,9 @@ class App extends Component {
                 <Redirect to="/europe/belgium/communes/la-bruyere" />
               )}
             />
-            <Route
-              render={() => (
-                <Redirect to="/europe/belgium/regions/region-flamande" />
-              )}
+            <Redirect
+              from="/europe/belgium/regions"
+              to="/europe/belgium/regions/region-flamande"
             />
           </Switch>
         </div>

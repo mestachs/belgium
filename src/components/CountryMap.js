@@ -73,6 +73,17 @@ class CountryMap extends React.Component {
 
   getStyle(feature) {
     const selected = this.state && this.state.selectedFeature === feature;
+    if (this.isEurope()) {
+      const isCee = feature.properties.zone.cee_accession !== undefined;
+      return {
+        fillColor: selected ? "red" : isCee ? "#badbad" : "#451263",
+        weight: 2,
+        opacity: 0.7,
+        color: selected ? "red" : isCee ? "rgb(166, 219, 173)" : "#631263",
+        dashArray: "3",
+        fillOpacity: 0.6
+      };
+    }
     if (this.isCommunesTypes()) {
       const parentZone = parentZonesByNsi[feature.properties.zone.nsi];
       return {
@@ -155,10 +166,6 @@ class CountryMap extends React.Component {
               const slugOuNl = slugify(ou.name.nl, {
                 lower: true
               });
-              if (name == undefined) {
-                console.log("no name for " + feature.properties.ISO2);
-                debugger;
-              }
               const slugName = slugify(name, {
                 lower: true
               });
@@ -190,6 +197,7 @@ class CountryMap extends React.Component {
           if (countries[feature.properties.ISO2]) {
             const country = countries[feature.properties.ISO2];
             feature.properties.zone.capital = country.capital;
+            feature.properties.zone.cee_accession = country.cee_accession;
           }
           if (feature.properties.slug === selectedZoneSlug) {
             selectedFeature = feature;

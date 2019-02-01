@@ -21,7 +21,6 @@ const factsToUnit = {
 
 const ZoneCard = props => {
   const { zone, zonesByNsi, parentZonesByNsi } = props;
-  debugger;
   return (
     <div className="card">
       <div className="container">
@@ -109,6 +108,7 @@ const ZoneCard = props => {
           </p>
         )}
         {zone.code && <FlagIcon code={zone.code.toLowerCase()} size="5x" />}
+        {zone.cee_accession && <p>CEE : {zone.cee_accession}</p>}
       </div>
     </div>
   );

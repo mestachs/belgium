@@ -45,7 +45,7 @@ class Radios extends Component {
   }
 
   play(radio, slug) {
-    this.props.history.push("/belgium/radios/" + radio.slug);
+    this.props.history.push("/europe/belgium/radios/" + radio.slug);
     this.setState({ playingNow: undefined });
     if (this.audio) {
       this.audio.pause();
