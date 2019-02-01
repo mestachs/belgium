@@ -1,16 +1,16 @@
 {
-  "main.css": "/belgium/static/css/main.8e910760.chunk.css",
-  "main.js": "/belgium/static/js/main.91f474b1.chunk.js",
-  "main.js.map": "/belgium/static/js/main.91f474b1.chunk.js.map",
+  "main.css": "/belgium/static/css/main.e6385b38.chunk.css",
+  "main.js": "/belgium/static/js/main.1eab4665.chunk.js",
+  "main.js.map": "/belgium/static/js/main.1eab4665.chunk.js.map",
   "static/css/1.a2851f51.chunk.css": "/belgium/static/css/1.a2851f51.chunk.css",
   "static/js/1.d653dc7c.chunk.js": "/belgium/static/js/1.d653dc7c.chunk.js",
   "static/js/1.d653dc7c.chunk.js.map": "/belgium/static/js/1.d653dc7c.chunk.js.map",
   "runtime~main.js": "/belgium/static/js/runtime~main.a37df266.js",
   "runtime~main.js.map": "/belgium/static/js/runtime~main.a37df266.js.map",
-  "static/media/flag-icon.css": "/belgium/static/media/do.e31ff1fd.svg",
-  "static/css/main.8e910760.chunk.css.map": "/belgium/static/css/main.8e910760.chunk.css.map",
+  "static/media/flag-icon.css": "/belgium/static/media/do.06e1cfe3.svg",
+  "static/css/main.e6385b38.chunk.css.map": "/belgium/static/css/main.e6385b38.chunk.css.map",
   "static/css/1.a2851f51.chunk.css.map": "/belgium/static/css/1.a2851f51.chunk.css.map",
   "index.html": "/belgium/index.html",
-  "precache-manifest.2b9eb9ab76bc3bce7aa2811ee8af819b.js": "/belgium/precache-manifest.2b9eb9ab76bc3bce7aa2811ee8af819b.js",
+  "precache-manifest.d37cfbcfb842a3d73ae5a8261b1760b9.js": "/belgium/precache-manifest.d37cfbcfb842a3d73ae5a8261b1760b9.js",
   "service-worker.js": "/belgium/service-worker.js"
 }
