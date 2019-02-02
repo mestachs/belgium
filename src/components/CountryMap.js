@@ -24,6 +24,14 @@ zones.forEach(zone => {
   }
 });
 
+const countryColors = {
+  founder: "#4CAF50",
+  "1973": "F57F17",
+  "1986": "#42A5F5",
+  "1995": "#304FFE",
+  "2004": "#9FA8DA"
+};
+
 const WikipediaArticle = props => {
   const { zone, article } = props;
   return (
@@ -74,9 +82,14 @@ class CountryMap extends React.Component {
   getStyle(feature) {
     const selected = this.state && this.state.selectedFeature === feature;
     if (this.isEurope()) {
-      const isCee = feature.properties.zone.cee_accession !== undefined;
+      const cee_accession = feature.properties.zone.cee_accession;
+      const isCee = cee_accession !== undefined;
       return {
-        fillColor: selected ? "red" : isCee ? "#badbad" : "#451263",
+        fillColor: selected
+          ? "red"
+          : isCee
+          ? countryColors[cee_accession] || "#badbad"
+          : "#451263",
         weight: 2,
         opacity: 0.7,
         color: selected ? "red" : isCee ? "rgb(166, 219, 173)" : "#631263",
