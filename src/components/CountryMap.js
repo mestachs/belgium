@@ -26,10 +26,12 @@ zones.forEach(zone => {
 
 const countryColors = {
   founder: "#4CAF50",
-  "1973": "F57F17",
+  "1973": "#F57F17",
+  "1981": "#zzzbad",
   "1986": "#42A5F5",
   "1995": "#304FFE",
-  "2004": "#9FA8DA"
+  "2004": "#9FA8DA",
+  "2007": "#badzzz"
 };
 
 const WikipediaArticle = props => {
@@ -283,11 +285,11 @@ class CountryMap extends React.Component {
           key={this.props.type}
           center={position}
           zoom={this.state.zoom}
-          style={{ width: "100%", height: "600px" }}
+          style={{ width: "100%", height: "1000px" }}
         >
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png"
+            attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           />
 
           {this.state.geojson && (
