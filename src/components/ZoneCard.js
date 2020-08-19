@@ -3,6 +3,15 @@ import { Link } from "react-router-dom";
 import slugify from "slugify";
 
 import FlagIcon from "./FlagIcon";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
 
 const numberWithSpaces = x => {
   var parts = x.toString().split(".");
@@ -20,7 +29,7 @@ const factsToUnit = {
 };
 
 const ZoneCard = props => {
-  const { zone, zonesByNsi, parentZonesByNsi } = props;
+  const { zone, zonesByNsi, feature, parentZonesByNsi } = props;
   return (
     <div className="card">
       <div className="container">
@@ -29,12 +38,34 @@ const ZoneCard = props => {
             src={zone.armories}
             alt={"armories of " + zone.name.fr}
             width="100%"
-            style={{ maxWidth: "200px", maxHeight: "200px" }}
+            style={{ maxWidth: "00px", maxHeight: "200px" }}
           />
         )}
         <h4>
           <b>{zone.name.fr}</b> <br /> <b>{zone.name.nl}</b>
         </h4>
+        {feature.properties.lastData}/{feature.properties.maxDelta} =>{" "}
+        {feature.properties.covid && (
+          <BarChart width={400} height={300} data={feature.properties.covid}>
+            <Bar dataKey="delta" fill="#redred" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" orientation="bottom" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+          </BarChart>
+        )}
+        {feature.properties.percentage} %
+        {feature.properties.last7Avg && (
+          <div>
+            {"Avg last 7 days  : " + feature.properties.last7Avg.toFixed(0)+" new cases"}
+          </div>
+        )}
+        {feature.properties.last14Avg && (
+          <div>
+            {"Avg last 14 days : " + feature.properties.last14Avg.toFixed(0)+" new cases"}
+          </div>
+        )}
         {zone.chiefTown && (
           <p>
             <i className="fas fa-gopuram" title="Chef lieu" /> &nbsp;

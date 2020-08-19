@@ -9,6 +9,7 @@ import countries from "./countries.json";
 import { withRouter } from "react-router-dom";
 import slugify from "slugify";
 import debounce from "lodash.debounce";
+import PapaParse from "papaparse";
 import wikiToMarkdown from "./WikiToMarkdown";
 Leaflet.Icon.Default.imagePath =
   "//cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/";
@@ -16,6 +17,11 @@ Leaflet.Icon.Default.imagePath =
 const zonesByNsi = {};
 
 const parentZonesByNsi = {};
+
+function getAvg(numbers) {
+  const total = numbers.reduce((acc, c) => acc + c, 0);
+  return total / numbers.length;
+}
 
 zones.forEach(zone => {
   zonesByNsi[zone.nsi] = zone;
@@ -65,6 +71,21 @@ const WikipediaArticle = props => {
   );
 };
 
+function toColor(perc) {
+  var r,
+    g,
+    b = 0;
+  if (perc < 50) {
+    r = 255;
+    g = Math.round(5.1 * perc);
+  } else {
+    g = 255;
+    r = Math.round(510 - 5.1 * perc);
+  }
+  var h = r * 0x10000 + g * 0x100 + b * 0x1;
+  return "#" + ("000000" + h.toString(16)).slice(-6);
+}
+
 class CountryMap extends React.Component {
   constructor() {
     super();
@@ -100,6 +121,61 @@ class CountryMap extends React.Component {
       };
     }
     if (this.isCommunesTypes()) {
+      if (this.state.covid) {
+        if (feature.properties.covid == undefined) {
+
+          feature.properties.covid = this.state.covid.filter(
+            d =>
+              feature.properties.nsi == "" + d.nis &&
+              d.delta !== "" &&
+              d.delta !== undefined
+          );
+          const covidData = feature.properties.covid;
+          const dd = covidData.map(d => d.delta);
+
+          if (dd.length != 0) {
+            var maxDelta = Math.max(...dd);
+
+            const lastData = dd[dd.length - 1];
+            const last14Avg = getAvg(dd.slice(Math.max(dd.length - 14, 0)))
+            const last7Avg = getAvg(dd.slice(Math.max(dd.length - 7, 0)))
+            let percentage = 100 - (lastData / maxDelta) * 100;
+
+            if (last7Avg.toFixed(0) >= 10) {
+              percentage = 0
+            } else if (last7Avg.toFixed(0) >= 2) {
+              percentage = 25
+            } else if (last7Avg.toFixed(0) >= 1) {
+              percentage = 45
+            }else {
+              percentage = 100
+            }
+            const color = toColor(percentage);
+
+            debugger;
+            feature.properties.percentage = percentage;
+            feature.properties.maxDelta = maxDelta;
+            feature.properties.color = color;
+            feature.properties.lastData = lastData;
+            feature.properties.last14Avg = last14Avg
+            feature.properties.last7Avg = last7Avg
+            console.log(feature.properties.name + " => " + percentage);
+          } else {
+            feature.properties.color = "black";
+          }
+        }
+
+        if (feature.properties.color) {
+          return {
+            fillColor: feature.properties.color,
+            weight: 2,
+            opacity: selected ? 1 : 0.5,
+            color: selected ? "blue" : "white",
+            dashArray: "3",
+            fillOpacity: 0.6
+          };
+        }
+      }
       const parentZone = parentZonesByNsi[feature.properties.zone.nsi];
       return {
         fillColor: selected ? "red" : parentZone ? parentZone.color : "#ece7f2",
@@ -148,14 +224,32 @@ class CountryMap extends React.Component {
     return this.props.type === "communes";
   }
 
-  loadData() {
+  async loadData() {
     const selectedZoneSlug = slugify(this.props.zone, { lower: true });
     const type = this.props.type;
 
     if (this.isCommunauteType()) {
       return;
     }
-    fetch("./" + type + ".geo.json")
+
+    if (this.isCommunesTypes()) {
+      const papa = PapaParse;
+      papa.parse("https://kronacheck.be/all.csv", {
+        download: true,
+        header: true,
+        delimiter: ",",
+        dynamicTyping: true,
+        complete: data => {
+          this.setState({ covid: data.data });
+        }
+      });
+    }
+
+    const filepath = this.isCommunesTypes()
+      ? "./communes-be-2019.geojson"
+      : "./" + type + ".geo.json";
+
+    fetch(filepath)
       .then(res => res.json())
       .then(geojson => {
         let selectedFeature = undefined;
@@ -163,10 +257,16 @@ class CountryMap extends React.Component {
           if (feature.properties === undefined) {
             feature.properties = { name: { fr: feature.nom, nl: feature.nom } };
           }
+          if (feature.properties.niscode) {
+            feature.properties.nsi = feature.properties.niscode;
+          }
+
           const names = feature.properties.VARNAME_1
             ? feature.properties.VARNAME_1.split("|")
             : [
-                feature.properties.nom
+                feature.properties.nom_commune
+                  ? feature.properties.nom_commune
+                  : feature.properties.nom
                   ? feature.properties.nom
                   : feature.properties.name
                   ? feature.properties.name
@@ -285,7 +385,7 @@ class CountryMap extends React.Component {
           key={this.props.type}
           center={position}
           zoom={this.state.zoom}
-          style={{ width: "100%", height: "1000px" }}
+          style={{ width: "100%", height: "1300px" }}
         >
           <TileLayer
             url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png"
@@ -312,10 +412,17 @@ class CountryMap extends React.Component {
             />
           )}
         </Map>
+
+        {this.state.selectedFeature &&
+          this.state.selectedFeature.properties.covid &&
+          this.state.selectedFeature.properties.covid
+            .map(d => d.delta)
+            .join(" , ")}
         {this.state.selectedFeature &&
           this.state.selectedFeature.properties.zone && (
             <ZoneCard
               zone={this.state.selectedFeature.properties.zone}
+              feature={this.state.selectedFeature}
               zonesByNsi={zonesByNsi}
               parentZonesByNsi={parentZonesByNsi}
             />
