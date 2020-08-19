@@ -91,8 +91,8 @@ class CountryMap extends React.Component {
     super();
     this.state = {
       lat: 50.5039,
-      lng: 4.4699,
-      zoom: 8
+      lng: 3.699,
+      zoom: 12
     };
     this.onEachFeature = this.onEachFeature.bind(this);
     this.clickToFeature = this.clickToFeature.bind(this);
@@ -140,19 +140,22 @@ class CountryMap extends React.Component {
             const last14Avg = getAvg(dd.slice(Math.max(dd.length - 14, 0)))
             const last7Avg = getAvg(dd.slice(Math.max(dd.length - 7, 0)))
             let percentage = 100 - (lastData / maxDelta) * 100;
-
-            if (last7Avg.toFixed(0) >= 10) {
+            const last7AvgRounded = Math.round(last7Avg)
+            if (last7AvgRounded >= 10) {
               percentage = 0
-            } else if (last7Avg.toFixed(0) >= 2) {
+            } else if (last7AvgRounded >= 3) {
               percentage = 25
-            } else if (last7Avg.toFixed(0) >= 1) {
-              percentage = 45
+            } else if (last7AvgRounded >= 2) {
+              percentage = 35
+            } else if (last7AvgRounded >= 1) {
+              percentage = 50
+            } else if (last7Avg > 0) {
+              percentage = 75
             }else {
               percentage = 100
             }
             const color = toColor(percentage);
 
-            debugger;
             feature.properties.percentage = percentage;
             feature.properties.maxDelta = maxDelta;
             feature.properties.color = color;
@@ -199,7 +202,7 @@ class CountryMap extends React.Component {
   handleResize() {
     if (!this.isEurope()) {
       const zoom =
-        window.innerWidth < 700 ? (window.innerWidth < 500 ? 6 : 7) : 8;
+        window.innerWidth < 700 ? (window.innerWidth < 500 ? 6 : 7) : 9;
       this.setState({ zoom });
     }
   }
@@ -389,7 +392,7 @@ class CountryMap extends React.Component {
         >
           <TileLayer
             url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png"
-            attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Covid data compiled by <a href="https://kronacheck.be/">kronacheck<a/>'
           />
 
           {this.state.geojson && (
@@ -413,11 +416,6 @@ class CountryMap extends React.Component {
           )}
         </Map>
 
-        {this.state.selectedFeature &&
-          this.state.selectedFeature.properties.covid &&
-          this.state.selectedFeature.properties.covid
-            .map(d => d.delta)
-            .join(" , ")}
         {this.state.selectedFeature &&
           this.state.selectedFeature.properties.zone && (
             <ZoneCard

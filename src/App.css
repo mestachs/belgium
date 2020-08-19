@@ -16,7 +16,7 @@ body {
 .card {
   position: absolute;
 
-  left: 70px;
+  left: 10px;
   top: 50px;
   width: 400px;
   z-index: 1000;
@@ -27,7 +27,7 @@ body {
   padding: 2px 16px;
   padding-bottom: 16px;
   left: 20%;
-  margin-left: -100px;
+  margin-left: -300px;
 }
 .card a,p,b{
   color: #323233 !important;

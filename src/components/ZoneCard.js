@@ -28,6 +28,15 @@ const factsToUnit = {
   surface: "km²"
 };
 
+const normalizer = string => {
+  return (string || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .replace(/ /g, "-")
+    .toLowerCase();
+};
+
 const ZoneCard = props => {
   const { zone, zonesByNsi, feature, parentZonesByNsi } = props;
   return (
@@ -46,26 +55,44 @@ const ZoneCard = props => {
         </h4>
         {feature.properties.lastData}/{feature.properties.maxDelta} =>{" "}
         {feature.properties.covid && (
-          <BarChart width={400} height={300} data={feature.properties.covid}>
-            <Bar dataKey="delta" fill="#redred" />
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" orientation="bottom" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-          </BarChart>
+          <>
+            <BarChart width={400} height={300} data={feature.properties.covid}>
+              <Bar dataKey="delta" fill="#redred" />
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" orientation="bottom" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+            </BarChart>
+          </>
         )}
-        {feature.properties.percentage} %
-        {feature.properties.last7Avg && (
+        {feature.properties.last7Avg !== undefined && (
           <div>
-            {"Avg last 7 days  : " + feature.properties.last7Avg.toFixed(0)+" new cases"}
+            {"Avg last 7 days  : " +
+              feature.properties.last7Avg.toFixed(0) +
+              " new cases"}
+              &nbsp;
+              &nbsp;
+              &nbsp;
+              &nbsp;
+            <a
+              style={{ textDecoration: "none" }}
+              href={
+                "https://kronacheck.be/?locations=" + normalizer(zone.name.fr)
+              }
+            >
+              🦠 kronacheck
+            </a>
           </div>
         )}
-        {feature.properties.last14Avg && (
+        {feature.properties.last14Avg !== undefined && (
           <div>
-            {"Avg last 14 days : " + feature.properties.last14Avg.toFixed(0)+" new cases"}
+            {"Avg last 14 days : " +
+              feature.properties.last14Avg.toFixed(0) +
+              " new cases"}
           </div>
         )}
+        {feature.properties.last14Avg && <div></div>}
         {zone.chiefTown && (
           <p>
             <i className="fas fa-gopuram" title="Chef lieu" /> &nbsp;
