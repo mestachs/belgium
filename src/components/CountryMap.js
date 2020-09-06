@@ -89,10 +89,13 @@ function toColor(perc) {
 class CountryMap extends React.Component {
   constructor() {
     super();
+
     this.state = {
       lat: 50.5039,
       lng: 3.699,
-      zoom: 12
+      zoom: 12,
+      offset: 0,
+      playing: false
     };
     this.onEachFeature = this.onEachFeature.bind(this);
     this.clickToFeature = this.clickToFeature.bind(this);
@@ -100,6 +103,15 @@ class CountryMap extends React.Component {
     this.loadData = this.loadData.bind(this);
     this.getStyle = this.getStyle.bind(this);
     this.handleResize = debounce(this.handleResize.bind(this), 500);
+    setInterval(() => {
+      if (this.state.playing) {
+        if (this.state.offset < 145) {
+          this.setState({ offset: this.state.offset + 1 });
+        } else {
+          this.setState({ offset: 0 });
+        }
+      }
+    }, 500);
   }
 
   getStyle(feature) {
@@ -123,49 +135,65 @@ class CountryMap extends React.Component {
     if (this.isCommunesTypes()) {
       if (this.state.covid) {
         if (feature.properties.covid == undefined) {
-
           feature.properties.covid = this.state.covid.filter(
             d =>
               feature.properties.nsi == "" + d.nis &&
               d.delta !== "" &&
               d.delta !== undefined
           );
-          const covidData = feature.properties.covid;
-          const dd = covidData.map(d => d.delta);
+        }
 
-          if (dd.length != 0) {
-            var maxDelta = Math.max(...dd);
+        const covidData = feature.properties.covid;
+        const dd = covidData.map(d => d.delta);
 
-            const lastData = dd[dd.length - 1];
-            const last14Avg = getAvg(dd.slice(Math.max(dd.length - 14, 0)))
-            const last7Avg = getAvg(dd.slice(Math.max(dd.length - 7, 0)))
-            let percentage = 100 - (lastData / maxDelta) * 100;
-            const last7AvgRounded = Math.round(last7Avg)
-            if (last7AvgRounded >= 10) {
-              percentage = 0
-            } else if (last7AvgRounded >= 3) {
-              percentage = 25
-            } else if (last7AvgRounded >= 2) {
-              percentage = 35
-            } else if (last7AvgRounded >= 1) {
-              percentage = 50
-            } else if (last7Avg > 0) {
-              percentage = 75
-            }else {
-              percentage = 100
-            }
-            const color = toColor(percentage);
+        if (dd.length != 0) {
+          var maxDelta = Math.max(...dd);
 
-            feature.properties.percentage = percentage;
-            feature.properties.maxDelta = maxDelta;
-            feature.properties.color = color;
-            feature.properties.lastData = lastData;
-            feature.properties.last14Avg = last14Avg
-            feature.properties.last7Avg = last7Avg
-            console.log(feature.properties.name + " => " + percentage);
-          } else {
-            feature.properties.color = "black";
+          const lastData = dd[dd.length - 1];
+          const offset = this.state.offset;
+          const datesData = feature.properties.covid.slice(
+            Math.max(dd.length - 14 - offset, 0),
+            dd.length - offset
+          );
+          feature.properties.datesData = datesData;
+          const last14Avg = getAvg(
+            dd.slice(Math.max(dd.length - 14 - offset, 0), dd.length - offset)
+          );
+          const last7Avg = getAvg(
+            dd.slice(Math.max(dd.length - 7 - offset, 0), dd.length - offset)
+          );
+          let percentage = 100 - (lastData / maxDelta) * 100;
+          const last7AvgRounded = Math.round(last7Avg);
+          if (last7AvgRounded >= 50) {
+            percentage = 0;
           }
+          if (last7AvgRounded >= 20) {
+            percentage = 5;
+          }
+          if (last7AvgRounded >= 10) {
+            percentage = 10;
+          } else if (last7AvgRounded >= 3) {
+            percentage = 25;
+          } else if (last7AvgRounded >= 2) {
+            percentage = 35;
+          } else if (last7AvgRounded >= 1) {
+            percentage = 50;
+          } else if (last7Avg > 0) {
+            percentage = 75;
+          } else {
+            percentage = 100;
+          }
+          const color = toColor(percentage);
+
+          feature.properties.percentage = percentage;
+          feature.properties.maxDelta = maxDelta;
+          feature.properties.color = color;
+          feature.properties.lastData = lastData;
+          feature.properties.last14Avg = last14Avg;
+          feature.properties.last7Avg = last7Avg;
+          console.log(feature.properties.name + " => " + percentage);
+        } else {
+          feature.properties.color = "black";
         }
 
         if (feature.properties.color) {
@@ -217,6 +245,10 @@ class CountryMap extends React.Component {
     this.loadData();
     if (this.isEurope()) {
       this.setState({ zoom: 4 });
+    }
+    if (window.location && this.state.playing == false) {
+    const params = new URLSearchParams(window.location.href.split("?")[1]);
+    this.setState({playing: params.get("playing")=="true"})
     }
   }
 
@@ -419,6 +451,7 @@ class CountryMap extends React.Component {
         {this.state.selectedFeature &&
           this.state.selectedFeature.properties.zone && (
             <ZoneCard
+              offset={this.state.offset}
               zone={this.state.selectedFeature.properties.zone}
               feature={this.state.selectedFeature}
               zonesByNsi={zonesByNsi}

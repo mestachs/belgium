@@ -38,7 +38,7 @@ const normalizer = string => {
 };
 
 const ZoneCard = props => {
-  const { zone, zonesByNsi, feature, parentZonesByNsi } = props;
+  const { zone, zonesByNsi, feature, parentZonesByNsi, offset } = props;
   return (
     <div className="card">
       <div className="container">
@@ -53,6 +53,7 @@ const ZoneCard = props => {
         <h4>
           <b>{zone.name.fr}</b> <br /> <b>{zone.name.nl}</b>
         </h4>
+        {feature.properties.datesData && <span>{feature.properties.datesData[0].date} -> {feature.properties.datesData[feature.properties.datesData.length -1 ].date} (offset: {offset})<br></br></span>}
         {feature.properties.lastData}/{feature.properties.maxDelta} =>{" "}
         {feature.properties.covid && (
           <>
@@ -70,7 +71,7 @@ const ZoneCard = props => {
           <div>
             {"Avg last 7 days  : " +
               feature.properties.last7Avg.toFixed(0) +
-              " new cases"}
+              " new cases/d"}
               &nbsp;
               &nbsp;
               &nbsp;
@@ -89,7 +90,7 @@ const ZoneCard = props => {
           <div>
             {"Avg last 14 days : " +
               feature.properties.last14Avg.toFixed(0) +
-              " new cases"}
+              " new cases/d"}
           </div>
         )}
         {feature.properties.last14Avg && <div></div>}
