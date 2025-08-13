@@ -288,8 +288,8 @@ class CountryMap extends React.Component {
           style={{ width: "100%", height: "1000px" }}
         >
           <TileLayer
-            url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png"
-            attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg"
+            attribution=        'Map tiles by <a href="https://stamen.com/">Stamen Design</a>, <a href="https://www.openstreetmap.org/copyright">OSM</a>, <a href="https://stadiamaps.com/">Stadia Maps</a>'
           />
 
           {this.state.geojson && (
